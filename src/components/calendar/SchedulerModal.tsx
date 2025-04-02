@@ -90,13 +90,6 @@ const SchedulerModal = ({ isOpen, onClose, onSchedule }: SchedulerModalProps) =>
         <div className="h-full mt-4">
           <NylasScheduling
             configurationId={configurationId}
-            theme={{
-              palette: {
-                primary: {
-                  main: "#4285F4",
-                },
-              },
-            }}
             onSuccess={handleScheduleSuccess}
           />
         </div>
