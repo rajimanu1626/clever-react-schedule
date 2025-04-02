@@ -2,6 +2,7 @@
 import { useState } from "react";
 import CalendarView from "@/components/calendar/CalendarView";
 import EventModal from "@/components/calendar/EventModal";
+import SchedulerModal from "@/components/calendar/SchedulerModal";
 import Header from "@/components/layout/Header";
 import { Event } from "@/types/Event";
 import { generateEvents } from "@/utils/eventUtils";
@@ -10,6 +11,7 @@ const Index = () => {
   const [events, setEvents] = useState<Event[]>(generateEvents());
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSchedulerOpen, setIsSchedulerOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
 
   const handleSelectEvent = (event: Event) => {
@@ -45,9 +47,27 @@ const Index = () => {
     setIsModalOpen(false);
   };
 
+  const handleCreateEvent = () => {
+    setIsSchedulerOpen(true);
+  };
+
+  const handleSchedule = (start: Date, end: Date) => {
+    setSelectedEvent({ 
+      id: String(new Date().getTime()),
+      title: "",
+      start,
+      end,
+      allDay: false,
+      category: "blue"
+    });
+    setIsSchedulerOpen(false);
+    setModalMode("create");
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="flex flex-col h-screen bg-background">
-      <Header />
+      <Header onCreateEvent={handleCreateEvent} />
       <main className="flex-1 overflow-hidden">
         <CalendarView 
           events={events}
@@ -64,6 +84,11 @@ const Index = () => {
             onDelete={handleDeleteEvent}
           />
         )}
+        <SchedulerModal 
+          isOpen={isSchedulerOpen}
+          onClose={() => setIsSchedulerOpen(false)}
+          onSchedule={handleSchedule}
+        />
       </main>
     </div>
   );
