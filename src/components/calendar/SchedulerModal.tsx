@@ -31,11 +31,17 @@ const SchedulerModal = ({ isOpen, onClose, onSchedule }: SchedulerModalProps) =>
     localStorage.setItem("nylasConfigId", value);
   };
 
-  const handleScheduleSuccess = (data: any) => {
-    if (data.event) {
-      const start = new Date(data.event.start_time * 1000);
-      const end = new Date(data.event.end_time * 1000);
-      onSchedule(start, end);
+  // Create a callback ref to handle the scheduling events
+  const handleSchedulingRef = (node: any) => {
+    if (node) {
+      // Add an event listener for the scheduling:success event
+      node.addEventListener('scheduling:success', (event: any) => {
+        if (event.detail && event.detail.event) {
+          const start = new Date(event.detail.event.start_time * 1000);
+          const end = new Date(event.detail.event.end_time * 1000);
+          onSchedule(start, end);
+        }
+      });
     }
   };
 
@@ -90,7 +96,7 @@ const SchedulerModal = ({ isOpen, onClose, onSchedule }: SchedulerModalProps) =>
         <div className="h-full mt-4">
           <NylasScheduling
             configurationId={configurationId}
-            onSuccess={handleScheduleSuccess}
+            ref={handleSchedulingRef}
           />
         </div>
       </DialogContent>
