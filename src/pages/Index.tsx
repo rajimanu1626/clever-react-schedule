@@ -1,12 +1,70 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from "react";
+import CalendarView from "@/components/calendar/CalendarView";
+import EventModal from "@/components/calendar/EventModal";
+import Header from "@/components/layout/Header";
+import { Event } from "@/types/Event";
+import { generateEvents } from "@/utils/eventUtils";
 
 const Index = () => {
+  const [events, setEvents] = useState<Event[]>(generateEvents());
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+
+  const handleSelectEvent = (event: Event) => {
+    setSelectedEvent(event);
+    setModalMode("edit");
+    setIsModalOpen(true);
+  };
+
+  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
+    setSelectedEvent({ 
+      id: String(new Date().getTime()),
+      title: "",
+      start,
+      end,
+      allDay: false,
+      category: "blue"
+    });
+    setModalMode("create");
+    setIsModalOpen(true);
+  };
+
+  const handleSaveEvent = (event: Event) => {
+    if (modalMode === "create") {
+      setEvents([...events, event]);
+    } else {
+      setEvents(events.map(e => e.id === event.id ? event : e));
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleDeleteEvent = (eventId: string) => {
+    setEvents(events.filter(e => e.id !== eventId));
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="flex flex-col h-screen bg-background">
+      <Header />
+      <main className="flex-1 overflow-hidden">
+        <CalendarView 
+          events={events}
+          onSelectEvent={handleSelectEvent}
+          onSelectSlot={handleSelectSlot}
+        />
+        {isModalOpen && selectedEvent && (
+          <EventModal
+            mode={modalMode}
+            event={selectedEvent}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSave={handleSaveEvent}
+            onDelete={handleDeleteEvent}
+          />
+        )}
+      </main>
     </div>
   );
 };
