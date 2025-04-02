@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { NylasScheduler } from "@nylas/react";
+import { NylasScheduling } from "@nylas/react";
 import { Event } from "@/types/Event";
 
 interface SchedulerModalProps {
@@ -55,7 +55,7 @@ const SchedulerModal = ({ isOpen, onClose, onSchedule }: SchedulerModalProps) =>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[90vw] h-[80vh]">
         <div className="h-full">
-          <NylasScheduler
+          <NylasScheduling
             apiKey={apiKey}
             onSuccess={handleScheduleSuccess}
             theme={{
