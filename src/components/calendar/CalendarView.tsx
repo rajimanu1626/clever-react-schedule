@@ -27,7 +27,7 @@ const CalendarView = ({ events, onSelectEvent, onSelectSlot }: CalendarViewProps
         startAccessor="start"
         endAccessor="end"
         style={{ height: "calc(100vh - 130px)" }}
-        views={["month", "week", "day"]}
+        views={["month", "week", "day", "agenda"]}
         defaultView={Views.MONTH}
         onView={setView}
         selectable
