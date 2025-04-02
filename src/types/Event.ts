@@ -10,4 +10,5 @@ export interface Event {
   category: EventCategory;
   description?: string;
   location?: string;
+  calendarId?: string; // Added for Nylas integration
 }
