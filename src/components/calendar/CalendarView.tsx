@@ -1,22 +1,14 @@
 
 import { useState } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay } from "date-fns";
-import { enUS } from "date-fns/locale";
+import moment from "moment";
 import { Event } from "@/types/Event";
 import { eventStyleGetter } from "@/utils/eventUtils";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "@/styles/calendar.css";
 
-// Create a localizer using date-fns
-const locales = { "en-US": enUS };
-const localizer = {
-  format: (date: Date, format: string) => format(date, format),
-  parse: (dateString: string, format: string) => parse(dateString, format, new Date()),
-  startOfWeek: (date: Date) => startOfWeek(date, { locale: enUS }),
-  getDay: (date: Date) => getDay(date),
-  locales
-};
+// Create a localizer using moment
+const localizer = momentLocalizer(moment);
 
 interface CalendarViewProps {
   events: Event[];
@@ -30,7 +22,7 @@ const CalendarView = ({ events, onSelectEvent, onSelectSlot }: CalendarViewProps
   return (
     <div className="h-full p-4">
       <Calendar
-        localizer={localizer as any}
+        localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
